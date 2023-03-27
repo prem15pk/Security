@@ -19,7 +19,7 @@ public class SiginUpController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @PostMapping("saveCustomer")
+    @PostMapping("/saveCustomer")
     public ResponseEntity<Object> saveUser(@RequestBody Customer customer) {
 
         ResponseEntity response = null;

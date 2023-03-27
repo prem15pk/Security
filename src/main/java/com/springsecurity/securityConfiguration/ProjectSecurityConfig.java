@@ -40,20 +40,31 @@ public class ProjectSecurityConfig {
         http.securityContext().requireExplicitSave(false)
                 .and()
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
-                .csrf((csrf)->csrf.csrfTokenRequestHandler(attributeHandler)
+                .csrf((csrf)->csrf.csrfTokenRequestHandler(attributeHandler).ignoringRequestMatchers("/saveCustomer")
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-                .authorizeHttpRequests().
-                requestMatchers("/getbalance","/getAccount").authenticated()
+
+
+                .authorizeHttpRequests()
                 .requestMatchers("/saveCustomer").permitAll()
+                . requestMatchers("/getbalance","/getAccount","/getAllTransactions").authenticated()
+
+                .and().httpBasic()
+                 //.requestMatchers("/saveCustomer").permitAll()
+
+
                 .and()
-                .formLogin()
-                .and()
-                .httpBasic();
+                .formLogin();
+
 
         return http.build();
 
     }
+//    @Bean
+//    SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+//        http.csrf().disable().authorizeHttpRequests().requestMatchers("/saveCustomer").permitAll().and().formLogin().and().httpBasic();
+//        return http.build();
+//    }
 
     @Bean
     public PasswordEncoder encoder(){
